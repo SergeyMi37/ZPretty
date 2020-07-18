@@ -83,6 +83,9 @@ SAME
 ##### ISJSON #####   
 ~~~
 USER>set crap=$replace(wrap,"""Home"":","")
+USER>do Do^ZPretty(crap)
+<THROW>%FromJSON+38^%Library.DynamicAbstractObject.1 *%Exception.General Parsing error 3 Line 5 Offset 3
+
 USER>try {do Do^ZPretty(jsn) Write "OK" IF 1} catch er { Write "NO" IF 0 } write !,$test
 OK
 1
