@@ -6,81 +6,87 @@
 ~~~
 
 ### install and usage ###  
-Packed Pretty.xml installs class ZPretty in any namespace.  
-calling $$Do^ZPretty(input,\[filler],\[newline]) returns wrapped JSON string 
-It's up to the you to Write it out or fill ir inot a stream
-ZJ.Pretty is a %Registered object and needs an instance to run the methdos.
+Packed Pretty.xml installs routine ZPretty in any namespace.  
+calling $$Do^ZPretty(input,\[filler],\[newline]) returns a wrapped JSON string.
+filler is the optional string for the indent, default = "  "  
+newline is optional, default =  $C(13,10)  <CR><LF>    
+accepted input: JSON_String, JSON_Stream, %DynamicAbstractObject  
+
+^Pretty leaves all error trapping to you. So can use it as ISJSON check.  
+
+Set flat=$$Do^Pretty(input,"","") removes all formatting from input.  
+this could be useful to compare 2 differn formatte JSON_Strings. 
 
 ### examples ###  
 ~~~
 USER>read jsn
-{"Name":"Cunningham,John C.","SSN":"294-11-9150","DOB":"1933-01-08","Home":{"Street":"4249 Ash Street","City":"Tampa","State":"MD","Zip":"30176"},"FavoriteColors":["White","Red","Green"]}
+{"Name":"Li,Robert K.","SSN":"672-92-9664","DOB":"1975-01-12","Home":{"Street":"986 Washington Blvd","City":"Boston","State":"PA","Zip":"95802"},"Office":{"Street":"6012 First Place","City":"Reston","State":"MT","Zip":"77739"},"Spouse":{"Name":"Avery,Zelda H.","SSN":"323-13-7437","DOB":"1943-03-27","Home":{"Street":"196 Main Drive","City":"Youngstown","State":"WY","Zip":"53229"},"Office":{"Street":"4056 Franklin Court","City":"Bensonhurst","State":"IA","Zip":"27688"},"FavoriteColors":["Black"],"Age":77},"Age":45,"Title":"Associate Marketing Manager","Salary":10421}
 USER>
 ~~~~  
 ##### straight to device #####   
 ~~~
-USER>do ##class(ZJ.Pretty).%New().Format(jsn)
+USER>write $$Do^ZPretty(jsn)
 {
-  "Name":"Cunningham,John C.",
-  "SSN":"294-11-9150",
-  "DOB":"1933-01-08",
+  "Name":"Li,Robert K.",
+  "SSN":"672-92-9664",
+  "DOB":"1975-01-12",
   "Home":{
-    "Street":"4249 Ash Street",
-    "City":"Tampa",
-    "State":"MD",
-    "Zip":"30176"
+    "Street":"986 Washington Blvd",
+    "City":"Boston",
+    "State":"PA",
+    "Zip":"95802"
   },
-  "FavoriteColors":[
-    "White",
-    "Red",
-    "Green"
-  ]
+  "Office":{
+    "Street":"6012 First Place",
+    "City":"Reston",
+    "State":"MT",
+    "Zip":"77739"
+  },
+  "Spouse":{
+    "Name":"Avery,Zelda H.",
+    "SSN":"323-13-7437",
+    "DOB":"1943-03-27",
+    "Home":{
+      "Street":"196 Main Drive",
+      "City":"Youngstown",
+      "State":"WY",
+      "Zip":"53229"
+    },
+    "Office":{
+      "Street":"4056 Franklin Court",
+      "City":"Bensonhurst",
+      "State":"IA",
+      "Zip":"27688"
+    },
+    "FavoriteColors":[
+      "Black"
+    ],
+    "Age":77
+  },
+  "Age":45,
+  "Title":"Associate Marketing Manager",
+  "Salary":10421
 }
 USER>
 ~~~
 
-##### to string #####   
+##### to string & compare #####   
 ~~~
-USER>do ##class(ZJ.Pretty).%New().FormatToString(jsn,.out)
-USER>write out
-{
-  "Name":"Cunningham,John C.",
-  "SSN":"294-11-9150",
-  "DOB":"1933-01-08",
-  "Home":{
-    "Street":"4249 Ash Street",
-    "City":"Tampa",
-    "State":"MD",
-    "Zip":"30176"
-  },
-  "FavoriteColors":[
-    "White",
-    "Red",
-    "Green"
-  ]
-}
-USER>
+USER>set wrap=$$Do^ZPretty(jsn)
+##### to string #####
+USER>write $s(wrap=jsn:"SAME",1:"DIFF")
+DIFF
+USER>write $s($$Do^ZPretty(wrap,"","")=jsn:"SAME",1:"DIFF")
+SAME
 ~~~
 
-##### to stream #####   
+##### ISJSON #####   
 ~~~
-USER>do ##class(ZJ.Pretty).%New().FormatToStream(jsn,.stream)
-USER>do stream.OutputToDevice()
-{
-  "Name":"Cunningham,John C.",
-  "SSN":"294-11-9150",
-  "DOB":"1933-01-08",
-  "Home":{
-    "Street":"4249 Ash Street",
-    "City":"Tampa",
-    "State":"MD",
-    "Zip":"30176"
-  },
-  "FavoriteColors":[
-    "White",
-    "Red",
-    "Green"
-  ]
-}
-USER>
+USER>set crap=$replace(wrap,"""Home"":","")
+USER>try {do Do^ZPretty(jsn) Write "OK" IF 1} catch er { Write "NO" IF 0 } write !,$test
+OK
+1
+USER>try {do Do^ZPretty(crap) Write "OK" IF 1} catch er { Write "NO" IF 0 } write !,$test
+NO
+0
 ~~~
