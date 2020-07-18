@@ -8,9 +8,9 @@
 ### install and usage ###  
 Packed Pretty.xml installs routine ZPretty in any namespace.  
 calling $$Do^ZPretty(input,\[filler],\[newline]) returns a wrapped JSON string.   
-filler is the optional string for the indent, default = "  "  
-newline is optional, default =  $C(13,10)  <CR><LF>    
-accepted input: JSON_String, JSON_Stream, %DynamicAbstractObject  
+_filler_ is the optional string for the indent, default = "  "  
+_newline_ is optional, default =  $C(13,10)  <CR><LF>    
+_input_ accepts: JSON_String, JSON_Stream, %DynamicAbstractObject  
 
 ^Pretty leaves all error trapping to you. So can use it as ISJSON check.  
 
