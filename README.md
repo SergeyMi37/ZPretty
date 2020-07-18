@@ -73,7 +73,7 @@ USER>
 ##### to string & compare #####   
 ~~~
 USER>set wrap=$$Do^ZPretty(jsn)
-##### to string #####
+
 USER>write $s(wrap=jsn:"SAME",1:"DIFF")
 DIFF
 USER>write $s($$Do^ZPretty(wrap,"","")=jsn:"SAME",1:"DIFF")
