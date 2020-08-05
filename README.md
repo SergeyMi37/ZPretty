@@ -93,3 +93,5 @@ USER>try {do Do^ZPretty(crap) Write "OK" IF 1} catch er { Write "NO" IF 0 } writ
 NO
 0
 ~~~
+
+[Article in DC](https://community.intersystems.com/post/wrap-json-multi-lines-test-isjson)
